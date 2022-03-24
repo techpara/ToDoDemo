@@ -15,6 +15,7 @@ builder.Services.AddRazorPages()
 builder.Services.AddDbContext<ToDoDemoDBContext>(options =>
   options.UseSqlServer(builder.Configuration.GetConnectionString("ToDoDemoCS")));
 builder.Services.AddScoped<EndpointWithoutRequest, GetToDoEndpoint>();
+builder.Services.AddScoped<Endpoint<CreateToDoDTO>, CreateToDoEndpoint>();
 
 builder.Services.AddFastEndpoints();
 builder.Services.AddSwaggerDoc();

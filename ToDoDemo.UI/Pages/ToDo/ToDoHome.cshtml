@@ -10,44 +10,15 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-4 offset-md-4">
-            <a asp-page="./create" class="btn btn-primary">Add New ToDo</a>
+        <div class="col-md-4 offset-md-4 tablecontainer">
+            <a href="javascript:void(0)" class="btn btn-primary" onclick="addRow()">Add New ToDo</a>
         </div>
-    </div>
-    <div class="row">
-
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>
-                        Task
-                    </th>
-                    <th>
-                        Edit
-                    </th>
-                    <th>
-                        Delete
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.allTodo)
-                {
-                    <tr>
-                        <td>@item.Name</td>
-                        <td><a asp-page="./edit" asp-route-id="@item.ID" class="btn btn-primary">Edit</a></td>
-                        <td><a asp-page="./delete" asp-route-id="@item.ID" class="btn btn-danger">Delete</a></td>
-                    </tr>
-                }
-            </tbody>
-        </table>
     </div>
 
     <table id="todoTable" class="display" cellspacing="0" width="100%">
         <thead>
             <tr>
                 <th>Task</th>
-                <th></th>
                 <th></th>
             </tr>
         </thead>
@@ -60,33 +31,69 @@
     <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/datetime/1.1.2/js/dataTables.dateTime.min.js"></script>
     <script type="text/javascript" language="javascript" src="https://editor.datatables.net/extensions/Editor/js/dataTables.editor.min.js"></script>
     <script>
-        var editor;
-        $(document).ready(function() {
+        function addRow() {
+            $('#todoTable tr:last').after('<tr><td><input id="txtName" type="text" /></td><td><a class="btn btn-primary" href="javascript:void(0)" onclick="CreateToDo()">Save</a></td></tr>');
+        }
 
-             $('#todoTable').DataTable({
-                "ajax":
-                {
-                    "url":"https://localhost:7221/api/todo/get",
-                    "contentType": "application/json",
+        function CreateToDo() {
+            var model = {
+                Name: $('#txtName').val()
+            };
+            console.log(model);
+            $.ajax({
+                type: "POST",
+                url: "/api/todo/create",
+                data: JSON.stringify(model),
+                cache: false,
+                contentType: 'application/json',
+                processData: false,
+                dataType: 'json',
+                success: function(response) {
+                    alert("Todo saved.");
+                    loadTodo();
+                },
+                done: function(response) {
+                    alert("Todo saved.");
+                    loadTodo();
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    console.log(xhr.responseText);
+                    console.log(xhr.status);
+                    console.log(thrownError);
+
+                }
+
+            })
+        }
+
+        $(document).ready(function() {
+            loadTodo();
+        });
+
+        function loadTodo() {
+            $('#todoTable').DataTable({
+                "ajax": {
+                    "url": "https://localhost:7221/api/todo/get",
                     "type": "GET",
                     "dataType": "JSON",
-                    "data": function (d) {
+                    "data": function(d) {
                         return d;
                     },
-                    "dataSrc": function (json) {
-                        console.log(json);
+                    "dataSrc": function(json) {
                         json.draw = json
                         json.data = json;
                         return json;
                     },
-                    error: function (xhr, error, code)
-                    {
+                    error: function(xhr, error, code) {
                         console.log(xhr);
+                        console.log(error);
                         console.log(code);
                     }
                 },
                 "processing": true,
-                "order": [[1, "desc"]],
+                "order": [
+                    [1, "desc"]
+                ],
                 "pagingType": "full_numbers",
                 "destroy": true,
                 "stateSave": false,
@@ -97,41 +104,33 @@
                 "language": {
                     "emptyTable": "No record(s) available."
                 },
-                drawCallback: function () {
+                drawCallback: function() {
                     var pagination = $(this).closest('.dataTables_wrapper').find('.dataTables_paginate');
                     pagination.toggle(this.api().page.info().pages >= 1);
                     var pageInfo = $(this).closest('.dataTables_wrapper').find('.dataTables_info');
                     pageInfo.toggle(this.api().page.info().pages >= 1);
                     var tableLength = $(this).closest('.dataTables_wrapper').find('.dataTables_length');
                     tableLength.toggle(this.api().page.info().pages >= 1);
-                    if (this.api().page.info().pages >= 1) {
-                        $('#ddlPages').next(".select2-container").show();
-                        loadPageDropdown(this.api().page.info());
-                    }
-                    else {
-                        $('#ddlPages').next(".select2-container").hide();
-                    }
                 },
-                "columns": [
-
-                    { 'data': 'name', "orderable": false },
+                "columns": [{
+                        'data': 'name',
+                        "orderable": false
+                    },
                     {
                         "class": "",
                         "orderable": false,
                         "data": null,
-                        "render": function (data, type, row, meta) {
+                        "render": function(data, type, row, meta) {
                             console.log(row);
                             var actionHTML = `<div class="table-action">`;
-                            actionHTML += `<a class="action me-2" href="/todo/details/${row.id}" >Edit</a>`;
-                            actionHTML += `&nbsp;<a href="javascript:void(0)" class="action me-2" onclick="DeleteTodo('${row.id}')" >Delete</a>`;
+                            actionHTML += `<a class="btn btn-primary" href="/todo/details/${row.ID}" >Edit</a>`;
+                            actionHTML += `&nbsp;<a href="javascript:void(0)" class="btn btn-danger" onclick="Deletetodo('${row.ID}')" >Delete</a>`;
                             actionHTML += `</div>`;
                             return actionHTML;
                         }
-                    }
+                    },
                 ]
             });
-
-
-        } );
+        }
     </script>
 </div>

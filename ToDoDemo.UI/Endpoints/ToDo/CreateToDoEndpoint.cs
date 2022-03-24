@@ -3,7 +3,7 @@ using ToDoDemo.Models;
 
 namespace ToDoDemo.API.Endpoints
 {
-    public class CreateToDoEndpoint : Endpoint<ToDoDTO>
+    public class CreateToDoEndpoint : Endpoint<CreateToDoDTO>
     {
         private readonly ToDoDemoDBContext _dbContext;
 
@@ -19,13 +19,13 @@ namespace ToDoDemo.API.Endpoints
             _dbContext = dbContext;
         }
 
-        public override async Task HandleAsync(ToDoDTO req, CancellationToken ct)
+        public override async Task HandleAsync(CreateToDoDTO req, CancellationToken ct)
         {
             var entry = _dbContext.Add(new ToDo());
             entry.CurrentValues.SetValues(req);
             await _dbContext.SaveChangesAsync();
 
-            await SendOkAsync();
+            await SendOkAsync(req);
         }
     }
 }
