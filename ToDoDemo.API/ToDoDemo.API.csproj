@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FastEndpoints" Version="3.11.0" />
+    <PackageReference Include="FastEndpoints.Swagger" Version="3.11.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ToDoDemo.Data\ToDoDemo.Data.csproj" />
+    <ProjectReference Include="..\ToDoDemo.Models\ToDoDemo.Models.csproj" />
+  </ItemGroup>
+
+</Project>
