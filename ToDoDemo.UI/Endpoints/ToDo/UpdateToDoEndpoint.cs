@@ -33,7 +33,7 @@ namespace ToDoDemo.API.Endpoints
             todo.Name = req.Name;
             await _dbContext.SaveChangesAsync();
         
-            await SendOkAsync();
+            await SendOkAsync(todo);
         }
     }
 }

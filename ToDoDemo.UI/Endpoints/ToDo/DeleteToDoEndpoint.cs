@@ -31,7 +31,7 @@ namespace ToDoDemo.API.Endpoints
             _dbContext.ToDo.Remove(recordToDelete);
             await _dbContext.SaveChangesAsync();
 
-            await SendOkAsync();
+            await SendOkAsync(recordToDelete);
         }
     }
 }

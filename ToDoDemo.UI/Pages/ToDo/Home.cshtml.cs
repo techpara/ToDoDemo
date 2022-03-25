@@ -5,10 +5,10 @@ using ToDoDemo.Data;
 using ToDoDemo.Models;
 namespace ToDoDemo.UI.Pages
 {
-    public class ToDoHomeModel : PageModel
+    public class HomeModel : PageModel
     {
         private readonly ToDoDemoDBContext _dbContext;
-        public ToDoHomeModel(ToDoDemoDBContext dbContext)
+        public HomeModel(ToDoDemoDBContext dbContext)
         {
             _dbContext = dbContext;
         }
