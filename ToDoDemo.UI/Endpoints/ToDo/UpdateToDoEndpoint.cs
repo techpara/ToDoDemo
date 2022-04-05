@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using ToDoDemo.Data;
-using ToDoDemo.Models;
+﻿using ToDoDemo.Models;
+using ToDoDemo.Services;
 
 namespace ToDoDemo.API.Endpoints
 {
     public class UpdateToDoEndpoint : Endpoint<ToDoDTO>
     {
-        private readonly ToDoDemoDBContext _dbContext;
+        private readonly IToDoService _toDoService;
         public override void Configure()
         {
             Verbs(Http.POST);
@@ -15,25 +13,15 @@ namespace ToDoDemo.API.Endpoints
             AllowAnonymous();
         }
 
-        public UpdateToDoEndpoint(ToDoDemoDBContext dbContext)
+        public UpdateToDoEndpoint(IToDoService toDoService)
         {
-            _dbContext = dbContext;
+            _toDoService = toDoService;
         }
 
         public override async Task HandleAsync(ToDoDTO req, CancellationToken ct)
         {
-            var todo = await _dbContext.ToDo.FindAsync(req.ID);
-
-            if (todo == null)
-            {
-                await SendNotFoundAsync();
-            }
-
-            //TO-DO Can use automapper
-            todo.Name = req.Name;
-            await _dbContext.SaveChangesAsync();
-        
-            await SendOkAsync(todo);
+            await _toDoService.Update(req);
+            await SendOkAsync(req);
         }
     }
 }

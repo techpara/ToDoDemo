@@ -1,11 +1,12 @@
 ﻿using ToDoDemo.Data;
 using ToDoDemo.Models;
+using ToDoDemo.Services;
 
 namespace ToDoDemo.API.Endpoints
 {
     public class CreateToDoEndpoint : Endpoint<CreateToDoDTO>
     {
-        private readonly ToDoDemoDBContext _dbContext;
+        private readonly IToDoService _toDoService;
 
         public override void Configure()
         {
@@ -14,16 +15,14 @@ namespace ToDoDemo.API.Endpoints
             AllowAnonymous();
         }
 
-        public CreateToDoEndpoint(ToDoDemoDBContext dbContext)
+        public CreateToDoEndpoint(IToDoService toDoService)
         {
-            _dbContext = dbContext;
+            _toDoService = toDoService;
         }
 
         public override async Task HandleAsync(CreateToDoDTO req, CancellationToken ct)
         {
-            var entry = _dbContext.Add(new ToDo());
-            entry.CurrentValues.SetValues(req);
-            await _dbContext.SaveChangesAsync();
+            await _toDoService.Create(req);
 
             await SendOkAsync(req);
         }

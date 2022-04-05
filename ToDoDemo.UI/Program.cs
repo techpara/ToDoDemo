@@ -5,6 +5,7 @@ using ToDoDemo.API.Endpoints;
 using ToDoDemo.Models;
 using Microsoft.EntityFrameworkCore;
 using ToDoDemo.Data;
+using ToDoDemo.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,9 @@ builder.Services.AddDbContext<ToDoDemoDBContext>(options =>
   options.UseSqlServer(builder.Configuration.GetConnectionString("ToDoDemoCS")));
 builder.Services.AddScoped<EndpointWithoutRequest, GetToDoEndpoint>();
 builder.Services.AddScoped<Endpoint<CreateToDoDTO>, CreateToDoEndpoint>();
+
+builder.Services.AddScoped<IToDoService, ToDoService>();
+
 
 builder.Services.AddFastEndpoints();
 builder.Services.AddSwaggerDoc();

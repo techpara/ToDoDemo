@@ -1,11 +1,11 @@
-﻿using ToDoDemo.Data;
-using ToDoDemo.Models;
+﻿using ToDoDemo.Models;
+using ToDoDemo.Services;
 
 namespace ToDoDemo.API.Endpoints
 {
     public class DeleteToDoEndpoint : Endpoint<ToDoDTO>
     {
-        private readonly ToDoDemoDBContext _dbContext;
+        private readonly IToDoService _toDoService;
 
         public override void Configure()
         {
@@ -14,24 +14,16 @@ namespace ToDoDemo.API.Endpoints
             AllowAnonymous();
         }
 
-        public DeleteToDoEndpoint(ToDoDemoDBContext dbContext)
+        public DeleteToDoEndpoint(IToDoService toDoService)
         {
-            _dbContext = dbContext;
+            _toDoService = toDoService;
         }
 
         public override async Task HandleAsync(ToDoDTO req, CancellationToken ct)
         {
-            var recordToDelete = await _dbContext.ToDo.FindAsync(req.ID);
+            await _toDoService.Delete(req);
 
-            if (recordToDelete == null)
-            {
-                await SendNotFoundAsync();
-            }
-
-            _dbContext.ToDo.Remove(recordToDelete);
-            await _dbContext.SaveChangesAsync();
-
-            await SendOkAsync(recordToDelete);
+            await SendOkAsync(req);
         }
     }
 }

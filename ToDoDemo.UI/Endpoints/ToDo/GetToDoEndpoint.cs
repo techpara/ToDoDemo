@@ -1,33 +1,25 @@
-﻿using Microsoft.AspNetCore.Cors;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using System.Text.Json.Serialization;
-using ToDoDemo.Data;
-using ToDoDemo.Models;
+﻿using ToDoDemo.Services;
 
 namespace ToDoDemo.API.Endpoints
 {
-   
-
     public class GetToDoEndpoint : EndpointWithoutRequest
     {
-        private readonly ToDoDemoDBContext _dbContext;
+        private readonly IToDoService _toDoService;
         public override void Configure()
         {
             Verbs(Http.GET);
             Routes("/api/todo/get");
             AllowAnonymous();
-            //SerializerContext<UpdateAddressCtx>();
         }
 
-        public GetToDoEndpoint(ToDoDemoDBContext dbContext)
+        public GetToDoEndpoint(IToDoService toDoService)
         {
-            _dbContext = dbContext;
+            _toDoService = toDoService;
         }
 
         public override async Task HandleAsync(CancellationToken ct)
         {
-            var allToDo = await _dbContext.ToDo.ToListAsync(); 
+            var allToDo = await _toDoService.GetAll();
             await SendAsync(allToDo);
         }
     }
