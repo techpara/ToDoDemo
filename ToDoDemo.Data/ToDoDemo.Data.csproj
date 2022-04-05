@@ -7,11 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\**" />
     <Compile Remove="Migrations_Backup\**" />
-    <EmbeddedResource Remove="Migrations\**" />
     <EmbeddedResource Remove="Migrations_Backup\**" />
-    <None Remove="Migrations\**" />
     <None Remove="Migrations_Backup\**" />
   </ItemGroup>
 

@@ -12,8 +12,8 @@ using ToDoDemo.Data;
 namespace ToDoDemo.Data.Migrations
 {
     [DbContext(typeof(ToDoDemoDBContext))]
-    [Migration("20220324045510_Initial-Migration-TableAdded")]
-    partial class InitialMigrationTableAdded
+    [Migration("20220405092240_InitialCreation")]
+    partial class InitialCreation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

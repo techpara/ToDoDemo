@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ToDoDemo.Models
 {
-    public class ToDo
+    public class ToDo : BaseEntity
     {
         public int ID { get; set; }
         public string Name { get; set; }
