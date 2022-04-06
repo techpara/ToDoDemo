@@ -5,7 +5,7 @@ namespace ToDoDemo.API.Endpoints
 {
     public class DeleteToDoEndpoint : Endpoint<ToDoDTO>
     {
-        private readonly IToDoService _toDoService;
+        private readonly IToDoService _ToDoService;
 
         public override void Configure()
         {
@@ -14,14 +14,14 @@ namespace ToDoDemo.API.Endpoints
             AllowAnonymous();
         }
 
-        public DeleteToDoEndpoint(IToDoService toDoService)
+        public DeleteToDoEndpoint(IToDoService ToDoService)
         {
-            _toDoService = toDoService;
+            _ToDoService = ToDoService;
         }
 
         public override async Task HandleAsync(ToDoDTO req, CancellationToken ct)
         {
-            await _toDoService.Delete(req);
+            await _ToDoService.Delete(req);
 
             await SendOkAsync(req);
         }

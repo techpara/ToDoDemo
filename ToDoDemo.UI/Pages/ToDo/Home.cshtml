@@ -16,15 +16,39 @@
         </div>
     </div>
 
-    <table id="todoTable" class="display" cellspacing="0" width="100%">
+    <table id="todoTable" class="table table-bordered">
         <thead>
             <tr>
-                <th>Task</th>
-                <th>Action</th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Edit
+                </th>
+                <th>
+                    Delete
+                </th>
             </tr>
         </thead>
+        <tbody>
+            @foreach (var item in Model.allTodo)
+            {
+                <tr>
+                    <td>
+                        <input id="txtName_@item.ID" type="text" value='@item.Name'/>
+                    </td>
+                    <td>
+                        <a class="btn btn-primary" onclick="UpdateToDo('@item.ID')" href="javascript:void(0)">Save</a>
+                        
+                    </td>
+                    <td>
+                        <a href="javascript:void(0)" class="btn btn-danger" onclick="DeleteToDoById('@item.ID')" >Delete</a>
+                    </td>
+                </tr>
+            }   
+        </tbody>
     </table>
-    
+
     <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
@@ -32,170 +56,98 @@
     <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/datetime/1.1.2/js/dataTables.dateTime.min.js"></script>
     <script type="text/javascript" language="javascript" src="https://editor.datatables.net/extensions/Editor/js/dataTables.editor.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.1/toastr.min.js"></script>
-    
+
     <script>
+        function addRow() {
+            $('#todoTable tr:last').after('<tr><td><input id="txtName" type="text" /></td><td><a class="btn btn-primary" href="javascript:void(0)" onclick="CreateToDo()">Save</a></td></tr>');
+        }
 
-            $(document).ready(function() {
-                loadTodo();
-            });
+        function DeleteToDoById(id) {
+            var model = {
+                ID: id
+            };
+            $.ajax({
+                type: "POST",
+                url: "/api/todo/delete",
+                data: JSON.stringify(model),
+                cache: false,
+                contentType: 'application/json',
+                processData: false,
+                dataType: 'json',
+                success: function(response) {
+                    toastr.success('Todo deleted successfully.')
+                    window.location.reload();
+                },
+                done: function(response) {
+                    toastr.success('Todo deleted successfully.')
+                    window.location.reload();
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    console.log(xhr.responseText);
+                    console.log(xhr.status);
+                    console.log(thrownError);
+                }
 
-            function addRow() {
-                $('#todoTable tr:last').after('<tr><td><input id="txtName" type="text" /></td><td><a class="btn btn-primary" href="javascript:void(0)" onclick="CreateToDo()">Save</a></td></tr>');
-            }
+            })
+        }
 
-            function DeleteToDoById(id) {
-                var model = {
-                    ID: id
-                };
-                $.ajax({
-                    type: "POST",
-                    url: "/api/todo/delete",
-                    data: JSON.stringify(model),
-                    cache: false,
-                    contentType: 'application/json',
-                    processData: false,
-                    dataType: 'json',
-                    success: function(response) {
-                        toastr.success('Todo deleted successfully.')
-                        loadTodo();
-                    },
-                    done: function(response) {
-                        toastr.success('Todo deleted successfully.')
-                        loadTodo();
-                    },
-                    error: function(xhr, ajaxOptions, thrownError) {
-                        console.log(xhr.responseText);
-                        console.log(xhr.status);
-                        console.log(thrownError);
-                    }
+        function UpdateToDo(id) {
+            var model = {
+                ID: id,
+                Name: $('#txtName_'+ id).val()
+            };
+            $.ajax({
+                type: "POST",
+                url: "/api/todo/update",
+                data: JSON.stringify(model),
+                cache: false,
+                contentType: 'application/json',
+                processData: false,
+                dataType: 'json',
+                success: function(response) {
+                    toastr.success('Todo updated successfully.')
+                    window.location.reload();
+                },
+                done: function(response) {
+                    toastr.success('Todo updated successfully.')
+                    window.location.reload();
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    console.log(xhr.responseText);
+                    console.log(xhr.status);
+                    console.log(thrownError);
+                }
 
-                })
-            }
+            })
+        }
 
-            function UpdateToDo(id) {
-                var model = {
-                    ID: id,
-                    Name: $('#txtName_'+ id).val()
-                };
-                $.ajax({
-                    type: "POST",
-                    url: "/api/todo/update",
-                    data: JSON.stringify(model),
-                    cache: false,
-                    contentType: 'application/json',
-                    processData: false,
-                    dataType: 'json',
-                    success: function(response) {
-                        toastr.success('Todo updated successfully.')
-                        loadTodo();
-                    },
-                    done: function(response) {
-                        toastr.success('Todo updated successfully.')
-                        loadTodo();
-                    },
-                    error: function(xhr, ajaxOptions, thrownError) {
-                        console.log(xhr.responseText);
-                        console.log(xhr.status);
-                        console.log(thrownError);
-                    }
+        function CreateToDo() {
+            var model = {
+                Name: $('#txtName').val()
+            };
 
-                })
-            }
-
-            function CreateToDo() {
-                var model = {
-                    Name: $('#txtName').val()
-                };
-
-                $.ajax({
-                    type: "POST",
-                    url: "/api/todo/create",
-                    data: JSON.stringify(model),
-                    cache: false,
-                    contentType: 'application/json',
-                    processData: false,
-                    dataType: 'json',
-                    success: function(response) {
-                        toastr.success('Todo created successfully.')
-                        loadTodo();
-                    },
-                    done: function(response) {
-                        toastr.success('Todo created successfully.')
-                        loadTodo();
-                    },
-                    error: function(xhr, ajaxOptions, thrownError) {
-                        console.log(xhr.responseText);
-                        console.log(xhr.status);
-                        console.log(thrownError);
-                    }
-                })
-            }
-
-            function loadTodo() {
-                $('#todoTable').DataTable({
-                    "ajax": {
-                        "url": "https://localhost:7221/api/todo/get",
-                        "type": "GET",
-                        "dataType": "JSON",
-                        "data": function(d) {
-                            return d;
-                        },
-                        "dataSrc": function(json) {
-                            json.draw = json
-                            json.data = json;
-                            return json;
-                        },
-                        error: function(xhr, error, code) {
-                            console.log(xhr);
-                            console.log(error);
-                            console.log(code);
-                        }
-                    },
-                    "processing": true,
-                    "order": [
-                        [1, "desc"]
-                    ],
-                    "pagingType": "full_numbers",
-                    "destroy": true,
-                    "stateSave": false,
-                    "serverSide": true,
-                    searching: false,
-                    info: true,
-                    lengthChange: true,
-                    "language": {
-                        "emptyTable": "No record(s) available."
-                    },
-                    rowId: 'id',
-                    drawCallback: function() {
-                        var pagination = $(this).closest('.dataTables_wrapper').find('.dataTables_paginate');
-                        pagination.toggle(this.api().page.info().pages >= 1);
-                        var pageInfo = $(this).closest('.dataTables_wrapper').find('.dataTables_info');
-                        pageInfo.toggle(this.api().page.info().pages >= 1);
-                        var tableLength = $(this).closest('.dataTables_wrapper').find('.dataTables_length');
-                        tableLength.toggle(this.api().page.info().pages >= 1);
-                    },
-                    "columns": [
-                        {
-                            "orderable": false,
-                            "data": "name",
-                            "render": function(data, type, row, meta) {
-                                return `<input id="txtName_${row.id}" type="text" value='${row.name}'/>`;
-                            }
-                        },
-                        {
-                            "class": "",
-                            "orderable": false,
-                            "data": null,
-                            "render": function(data, type, row, meta) {
-                                var actionHTML = `<div class="table-action">`;
-                                actionHTML += `<a class="btn btn-primary" onclick="UpdateToDo('${row.id}')" href="javascript:void(0)">Save</a>`;
-                                actionHTML += `&nbsp;<a href="javascript:void(0)" class="btn btn-danger" onclick="DeleteToDoById('${row.id}')" >Delete</a>`;
-                                actionHTML += `</div>`;
-                                return actionHTML;
-                            }
-                        },
-                    ]
-                });
-            }
+            $.ajax({
+                type: "POST",
+                url: "/api/todo/create",
+                data: JSON.stringify(model),
+                cache: false,
+                contentType: 'application/json',
+                processData: false,
+                dataType: 'json',
+                success: function(response) {
+                    toastr.success('Todo created successfully.')
+                    window.location.reload();
+                },
+                done: function(response) {
+                    toastr.success('Todo created successfully.')
+                    window.location.reload();
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    console.log(xhr.responseText);
+                    console.log(xhr.status);
+                    console.log(thrownError);
+                }
+            })
+        }
     </script>
 </div>

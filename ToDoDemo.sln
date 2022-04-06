@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoDemo.Models", "ToDoDemo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoDemo.UI", "ToDoDemo.UI\ToDoDemo.UI.csproj", "{1DC878C1-4F29-449E-AE41-EF251AF3E131}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDoDemo.Services", "ToDoDemo.Services\ToDoDemo.Services.csproj", "{504FDFB9-EE54-4AFA-9347-96D6DC7D9ACE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoDemo.Services", "ToDoDemo.Services\ToDoDemo.Services.csproj", "{504FDFB9-EE54-4AFA-9347-96D6DC7D9ACE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

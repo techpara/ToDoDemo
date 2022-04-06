@@ -9,16 +9,19 @@ using ToDoDemo.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddHttpClient();
+
 // Add services to the container.
 builder.Services.AddRazorPages()
       .AddRazorRuntimeCompilation(); 
 
 builder.Services.AddDbContext<ToDoDemoDBContext>(options =>
   options.UseSqlServer(builder.Configuration.GetConnectionString("ToDoDemoCS")));
-builder.Services.AddScoped<EndpointWithoutRequest, GetToDoEndpoint>();
-builder.Services.AddScoped<Endpoint<CreateToDoDTO>, CreateToDoEndpoint>();
 
 builder.Services.AddScoped<IToDoService, ToDoService>();
+
+builder.Services.AddScoped<EndpointWithoutRequest, GetToDoEndpoint>();
+builder.Services.AddScoped<Endpoint<CreateToDoDTO>, CreateToDoEndpoint>();
 
 
 builder.Services.AddFastEndpoints();

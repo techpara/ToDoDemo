@@ -5,7 +5,7 @@ namespace ToDoDemo.API.Endpoints
 {
     public class UpdateToDoEndpoint : Endpoint<ToDoDTO>
     {
-        private readonly IToDoService _toDoService;
+        private readonly IToDoService _ToDoService;
         public override void Configure()
         {
             Verbs(Http.POST);
@@ -13,14 +13,14 @@ namespace ToDoDemo.API.Endpoints
             AllowAnonymous();
         }
 
-        public UpdateToDoEndpoint(IToDoService toDoService)
+        public UpdateToDoEndpoint(IToDoService ToDoService)
         {
-            _toDoService = toDoService;
+            _ToDoService = ToDoService;
         }
 
         public override async Task HandleAsync(ToDoDTO req, CancellationToken ct)
         {
-            await _toDoService.Update(req);
+            await _ToDoService.Update(req);
             await SendOkAsync(req);
         }
     }
